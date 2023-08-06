@@ -2,7 +2,7 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
-      <target name="weitong.liao@35.215.165.210:22" type="ssh/sftp" uuid="b4e4588a-fecc-47ca-a954-b7b6036b6d67">
+      <target name="weitong.liao@35.215.165.210:223" type="ssh/sftp" uuid="a3dba648-e942-45fc-9f9d-159affc9a70a">
         <config>
           <option name="projectRootOnTarget" value="/home/weitong.liao/dht_server" />
           <option name="serverName" value="weitong.liao@35.215.165.210:22 agent" />
@@ -10,7 +10,7 @@
         </config>
         <ContributedStateBase type="JavaLanguageRuntime">
           <config>
-            <option name="homePath" value="/" />
+            <option name="homePath" value="/usr/lib/jvm/java-11-openjdk-11.0.18.0.9-0.3.ea.el8.x86_64" />
             <option name="javaVersionString" value="11.0.18-ea" />
           </config>
         </ContributedStateBase>

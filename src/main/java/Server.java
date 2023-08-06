@@ -1,5 +1,6 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ public class Server {
             DatagramSocket serverSocket = new DatagramSocket(12345);
 
             // 用于保存节点信息的Map，key为节点标识符，value为节点信息（IP和端口号）
+//            System.out.println("aa");
             Map<Integer, NodeInfo> nodeMap = new HashMap<>();
 
             byte[] receiveData = new byte[1024];
@@ -22,6 +24,7 @@ public class Server {
 
                 // 分配节点标识符，这里简单使用客户端的端口号作为标识符
                 int nodeId = clientPort;
+                System.out.println(nodeId + " ip "+clientIP+" port "+clientPort);
 
                 // 保存节点信息到Map
                 NodeInfo nodeInfo = new NodeInfo(clientIP, clientPort);
@@ -33,13 +36,17 @@ public class Server {
                 // 如果有两个节点加入，将它们的信息互相发送
                 System.out.println(nodeMap.keySet());
                 if (nodeMap.size() == 2) {
-                    for (int id : nodeMap.keySet()) {
-                        NodeInfo otherNode = (id != nodeId) ? nodeMap.get(id) : null;
-                        if (otherNode != null) {
-                            sendNodeInfoToClient(id, otherNode, serverSocket, receivePacket.getAddress(), receivePacket.getPort());
-                            System.out.println(otherNode);
+                    for (int id1 : nodeMap.keySet()) {
+                        for (int id2 : nodeMap.keySet()) {
+                            if (id1 != id2) {
+                                String ipAddress = nodeMap.get(id2).getIp();
+                                InetAddress inetAddress = InetAddress.getByName(ipAddress);
+                                sendNodeInfoToClient(id1, nodeMap.get(id1), serverSocket, inetAddress, nodeMap.get(id2).port);
+                                System.out.println(id1 +" " +nodeMap.get(id2).port);
+                            }
                         }
                     }
+                    nodeMap.clear();
                 }
             }
         } catch (Exception e) {

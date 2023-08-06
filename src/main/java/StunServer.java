@@ -1,3 +1,73 @@
+import java.io.*;
+import java.net.*;
+
+public class StunServer {
+
+    public static void main(String[] args) {
+        final int port = 12345; // 服务器监听的端口号
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
+
+            System.out.println("Mediator Server is running and listening on port " + port);
+
+            while (true) {
+                Socket clientSocket1 = serverSocket.accept();
+                System.out.println("Received connection from Client 1: " + clientSocket1.getRemoteSocketAddress());
+
+                Socket clientSocket2 = serverSocket.accept();
+                System.out.println("Received connection from Client 2: " + clientSocket2.getRemoteSocketAddress());
+
+                // 将两个客户端的信息发送给对方
+                sendClientInfo(clientSocket1, clientSocket2);
+                sendClientInfo(clientSocket2, clientSocket1);
+
+                // 启动两个线程分别处理与两个客户端的通信
+                new Thread(new clientHandler(clientSocket1, clientSocket2)).start();
+                new Thread(new clientHandler(clientSocket2, clientSocket1)).start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void sendClientInfo(Socket toClient, Socket otherClient) throws IOException {
+        String clientInfo = otherClient.getInetAddress().getHostAddress() + ":" + otherClient.getPort();
+        PrintWriter writer = new PrintWriter(toClient.getOutputStream(), true);
+        writer.println(clientInfo);
+    }
+}
+
+class clientHandler implements Runnable {
+    private final Socket clientSocket;
+    private final Socket otherClient;
+
+    public clientHandler(Socket clientSocket, Socket otherClient) {
+        this.clientSocket = clientSocket;
+        this.otherClient = otherClient;
+    }
+
+    @Override
+    public void run() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter writer = new PrintWriter(otherClient.getOutputStream(), true);
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Received from " + clientSocket.getRemoteSocketAddress() + ": " + line);
+                writer.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
 //import java.net.DatagramPacket;
 //import java.net.DatagramSocket;
 //import java.net.InetAddress;

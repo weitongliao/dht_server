@@ -15,10 +15,10 @@ public class ChatServer {
             System.out.println("Client 2 connected: " + clientSocket2.getInetAddress() + ":" + clientSocket2.getPort());
 
             // 创建并启动两个线程用于处理客户端的消息
-            ClientHandler clientHandler1 = new ClientHandler(clientSocket1, clientSocket2);
-            ClientHandler clientHandler2 = new ClientHandler(clientSocket2, clientSocket1);
-            clientHandler1.start();
-            clientHandler2.start();
+//            clientHandler clientHandler1 = new clientHandler(clientSocket1, clientSocket2);
+//            clientHandler clientHandler2 = new clientHandler(clientSocket2, clientSocket1);
+//            clientHandler1.start();
+//            clientHandler2.start();
 
         } catch (IOException e) {
             e.printStackTrace();
